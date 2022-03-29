@@ -75,8 +75,6 @@ def Main_chart(df, keys):
     source = df[df[keys['drug']] == 'CL0'][[keys['options'], 'ID']].groupby(keys['options']).count().transform(lambda x: 100*x/x.sum())
     source_1 = df[df[keys['drug']] == 'CL1'][[keys['options'], 'ID']].groupby(keys['options']).count().transform(lambda x: 100*x/x.sum())
     X = source_1.merge(source, on=keys['options'])
-    source_2 = df[df[keys['drug']] == 'CL2'][[keys['options'], 'ID']].groupby(keys['options']).count().transform(lambda x: 100 * x / x.sum())
-    X = X.merge(source_2, on=keys['options'])
     print(X)
     source[keys['options']] = source.index
     X[keys['options']] = X.index
@@ -89,11 +87,7 @@ def Main_chart(df, keys):
         theta=alt.Theta(field='ID_y', type="quantitative"),
         color=alt.Color(field=keys['options'], type="nominal"),
         tooltip=[keys['options'], 'ID_y']).properties(width=200, height=200)
-    chart3 = alt.Chart(X).mark_arc(innerRadius=50).encode(
-        theta=alt.Theta(field='ID', type="quantitative"),
-        color=alt.Color(field=keys['options'], type="nominal"),
-        tooltip=[keys['options'], 'ID']).properties(width=100, height=100)
-    chart = alt.layer(chart1, chart2, chart3).properties(width=1000, height=1000)
+    chart = alt.layer(chart1, chart2)
     return chart
 
 '''
