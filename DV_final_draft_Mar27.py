@@ -2,6 +2,7 @@
 # Tutorial: Building data apps with Streamlit
 Created by Natkamon Tovanich - version 2022-03-01
 """
+# from curses import use_default_colors
 import openpyxl
 import streamlit as st
 import pandas as pd
@@ -16,14 +17,13 @@ st.set_page_config(layout="wide")
 # Visualization of Drug Consumption Behavior
 
 ## Dataframe'''
-dd
 
 
 # Load Gapminder data
 # @st.cache decorator skip reloading the code when the apps rerun.
 @st.cache
 def loadData():
-    df = pd.read_excel('C:/Users/Shwetha/Downloads/Data Visualisation _labs/Dataset 4 Drug Consumption Dataset_cleaned.xlsx')
+    df = pd.read_excel('C:/Users/youji/Desktop/T2/DV/Dataset 4 Drug Consumption Dataset_cleaned.xlsx')
     return df
 
 df = loadData()
@@ -82,11 +82,11 @@ def Main_chart(df, keys):
     chart1 = alt.Chart(X).mark_arc(innerRadius=200).encode(
         theta=alt.Theta(field='ID_x', type="quantitative"),
         color=alt.Color(field=keys['options'], type="nominal"),
-        tooltip=[keys['options'], 'ID_x']).properties(width=400, height=400)
+        tooltip=[keys['options'], 'ID_x']).properties(height=500)
     chart2 = alt.Chart(X).mark_arc(innerRadius=100).encode(
         theta=alt.Theta(field='ID_y', type="quantitative"),
         color=alt.Color(field=keys['options'], type="nominal"),
-        tooltip=[keys['options'], 'ID_y']).properties(width=200, height=200)
+        tooltip=[keys['options'], 'ID_y']).properties(height=300)
     chart = alt.layer(chart1, chart2)
     return chart
 
@@ -94,7 +94,7 @@ def Main_chart(df, keys):
 
 
 '''
-st.altair_chart(Main_chart(df, keys)) 
+st.altair_chart(Main_chart(df, keys), use_container_width=True)
 
 # stacked pie chart: https://stackoverflow.com/questions/33019879/hierarchic-pie-donut-chart-from-pandas-dataframe-using-bokeh-or-matplotlib/33046810
 # nested pie chart : https://matplotlib.org/stable/gallery/pie_and_polar_charts/nested_pie.html#sphx-glr-gallery-pie-and-polar-charts-nested-pie-py
@@ -109,7 +109,7 @@ def sub_chart1(df, keys):
         y=alt.Y('ID:Q', title = 'Number of people'),
         color=alt.Color('Gender', legend = alt.Legend(orient = "right")),
         column=keys['options']
-        ).properties(width=20, height=150)
+        ) #.properties(use_container_width = True, height=150)
         
     return chart
 
@@ -140,17 +140,19 @@ def sub_chart2(df, keys):
 col1, col2 = st.columns(2)
 
 with col1:
-    st.write("#### Number of people in selected category")
-    st.write("Selected Category:", options)
-    st.altair_chart(sub_chart1(df, keys)) 
+    with st.container():
+        st.write("#### Number of people in selected category")
+        st.write("Selected Category:", options)
+        st.altair_chart(sub_chart1(df, keys), use_container_width=True) 
 
 with col2:
-    st.write("#### Distribution of personal trait over selected category and drug")
-    st.write("Selected category and drug: ", options, ",", drug)
-    scores = st.multiselect(
-     'Select the scores for personal trait:',
-     ['Nscore', 'Escore', 'Oscore', 'Ascore', 'Cscore'], ['Nscore', 'Escore', 'Oscore', 'Ascore', 'Cscore'])
-    
-    keys['scores'] = scores
-    st.altair_chart(sub_chart2(df, keys)) 
+        with st.container():
+            st.write("#### Distribution of personal trait over selected category and drug")
+            st.write("Selected category and drug: ", options, ",", drug)
+            scores = st.multiselect(
+            'Select the scores for personal trait:',
+            ['Nscore', 'Escore', 'Oscore', 'Ascore', 'Cscore'], ['Nscore', 'Escore', 'Oscore', 'Ascore', 'Cscore'])
+            
+            keys['scores'] = scores
+            st.altair_chart(sub_chart2(df, keys), use_container_width=True) 
     
