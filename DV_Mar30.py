@@ -8,7 +8,6 @@ from pydoc import cli
 import streamlit as st
 import pandas as pd
 import altair as alt
-import plotly.express as px
 import plotly.graph_objs as go
 from streamlit_plotly_events import plotly_events
 
