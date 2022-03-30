@@ -28,7 +28,7 @@ For each respondent, 12 attributes are included: personality measurement of impu
 
 @st.cache
 def loadData():
-    df = pd.read_excel('Dataset 4 Drug Consumption Dataset_cleaned.xlsx')
+    df = pd.read_excel('Dataset 4 Drug Consumption ass2.xlsx')
     df_original = pd.read_excel('drug_consumption_original.xlsx')
     return df, df_original
 
