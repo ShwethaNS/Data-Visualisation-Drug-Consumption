@@ -17,14 +17,13 @@ st.set_page_config(layout="wide")
 # Visualization of Drug Consumption Behavior
 
 ## Dataframe'''
-dd
 
 
 # Load Gapminder data
 # @st.cache decorator skip reloading the code when the apps rerun.
 @st.cache
 def loadData():
-    df = pd.read_excel('C:/Users/Shwetha/Downloads/Data Visualisation _labs/Dataset 4 Drug Consumption Dataset_cleaned.xlsx')
+    df = pd.read_excel('Dataset 4 Drug Consumption Dataset_cleaned.xlsx')
     return df
 
 df = loadData()
@@ -64,11 +63,6 @@ keys['drug'] = drug
 keys['options'] = options
 keys_1['options'] = options
 
-#source = df[df[keys['drug']] == 'CL0'][[keys['options'], 'ID']].groupby(keys['options']).count()
-# source[keys['options']] = source.index
-#X = df[df[keys['drug']] == 'CL1'][[keys['options'], 'ID']].groupby(keys['options']).count().transform(lambda x: 100*x/x.sum())
-#X = X.merge(source, on=keys['options'])
-#print(X)
 
 @st.cache(allow_output_mutation=True)
 def Main_chart(df, keys):
@@ -77,40 +71,74 @@ def Main_chart(df, keys):
         lambda x: 100 * x / x.sum())
     source_2 = df[df[keys['drug']] == 'CL1'][[keys['options'], 'ID']].groupby(keys['options']).count().transform(
         lambda x: 100 * x / x.sum())
-    X = source_1.merge(source_2, on=keys['options'])
     source_3 = df[df[keys['drug']] == 'CL2'][[keys['options'], 'ID']].groupby(keys['options']).count().transform(
         lambda x: 100 * x / x.sum())
-    X = X.merge(source_3, on=keys['options'])
+    source_4 = df[df[keys['drug']] == 'CL3'][[keys['options'], 'ID']].groupby(keys['options']).count().transform(
+        lambda x: 100 * x / x.sum())
+    print(source_4)
+    source_5 = df[df[keys['drug']] == 'CL4'][[keys['options'], 'ID']].groupby(keys['options']).count().transform(
+        lambda x: 100 * x / x.sum())
+    source_6 = df[df[keys['drug']] == 'CL5'][[keys['options'], 'ID']].groupby(keys['options']).count().transform(
+        lambda x: 100 * x / x.sum())
+
+
 
     data = [  # Portfolio (inner donut)
-        go.Pie(values=list(X['ID_x']),
-               labels=X.index.values.tolist(),
-               domain={'x': [0.3, 0.7], 'y': [0.2, 0.8]},
-               hole=0.5,
+        go.Pie(values=list(source_1['ID']),
+               labels=source_1.index.values.tolist(),
+               domain={'x': [0.1, 0.9], 'y': [0, 1]},
+               hole=0.9,
                direction='clockwise',
                sort=False,
                marker=dict(colors=['#EC7063', '#F1948A', '#2E86C1', '#5DADE2', '#85C1E9'],
                            line=dict(color='#000000', width=2))
                ),
         # Individual components (outer donut)
-        go.Pie(values=list(X['ID_y']),
-               labels=X.index.values.tolist(),
+        go.Pie(values=list(source_2['ID']),
+               labels=source_2.index.values.tolist(),
                domain={'x': [0.2, 0.8], 'y': [0.1, 0.9]},
-               hole=0.75,
+               hole=0.8,
                direction='clockwise',
                sort=False,
                marker=dict(colors=['#EC7063', '#F1948A', '#2E86C1', '#5DADE2', '#85C1E9'],
                            line=dict(color='#000000', width=2)),
                showlegend=False),
-        go.Pie(values=list(X['ID']),
-               labels=X.index.values.tolist(),
-               domain={'x': [0.1, 0.9], 'y': [0, 1]},
-               hole=0.75,
+        go.Pie(values=list(source_3['ID']),
+               labels=source_3.index.values.tolist(),
+               domain={'x': [0.3, 0.7], 'y': [0.2, 0.8]},
+               hole=0.7,
+               direction='clockwise',
+               sort=False,
+               marker=dict(colors=['#EC7063', '#F1948A', '#2E86C1', '#5DADE2', '#85C1E9'],
+                           line=dict(color='#000000', width=2)),
+               showlegend=False),
+        go.Pie(values=list(source_4['ID']),
+               labels=source_4.index.values.tolist(),
+               domain={'x': [0.4, 0.6], 'y': [0.3, 0.7]},
+               hole=0.6,
                direction='clockwise',
                sort=False,
                marker=dict(colors=['#EC7063', '#F1948A', '#2E86C1', '#5DADE2', '#85C1E9'],
                            line=dict(color='#000000', width=2)),
                showlegend=False)
+        # go.Pie(values=list(source_5['ID']),
+        #        labels=source_5.index.values.tolist(),
+        #        domain={'x': [0.2, 0.8], 'y': [0.1, 0.9]},
+        #        hole=0.8,
+        #        direction='clockwise',
+        #        sort=False,
+        #        marker=dict(colors=['#EC7063', '#F1948A', '#2E86C1', '#5DADE2', '#85C1E9'],
+        #                    line=dict(color='#000000', width=2)),
+        #        showlegend=False),
+        # go.Pie(values=list(source_6['ID']),
+        #        labels=source_6.index.values.tolist(),
+        #        domain={'x': [0.1, 0.9], 'y': [0, 1]},
+        #        hole=0.9,
+        #        direction='clockwise',
+        #        sort=False,
+        #        marker=dict(colors=['#EC7063', '#F1948A', '#2E86C1', '#5DADE2', '#85C1E9'],
+        #                    line=dict(color='#000000', width=2)),
+        #        showlegend=False)
     ]
 
     fig = go.Figure(data=data, layout={'title': 'Percentage distribution of people in a category'})
