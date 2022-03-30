@@ -8,21 +8,12 @@ import openpyxl
 import streamlit as st
 import pandas as pd
 import altair as alt
-from altair import datum
 import plotly.express as px
 import plotly.graph_objs as go
-from ipywidgets import Output, VBox
 from streamlit_plotly_events import plotly_events
-from streamlit.state.session_state import SessionState
-#from vega_datasets import data
-#from streamlit_vega_lite import vega_lite_component, altair_component
-import time
-import warnings
+
 st.set_page_config(layout="wide")
 
-
-# warnings.simplefilter("ignore", UserWarning)
-showWarningOnDirectExecution = False
 
 '''
 # Visualization of Drug Consumption Behavior
@@ -80,19 +71,17 @@ keys_1['options'] = options
 #X = X.merge(source, on=keys['options'])
 #print(X)
 
-# @st.cache(allow_output_mutation=True)
-# def Main_chart(df, keys):
-    # selected = alt.selection_multi(encodings=['x', 'y', 'size'])
+
 consum_dict = dict()
 consum_dict = {0: "CL0", 1:"CL1", 2:"CL2", 3:"CL3", 4: "CL4", 5:'CL6'}
 source_1 = df[df[keys['drug']] == 'CL0'][[keys['options'], 'ID']].groupby(keys['options']).count().transform(
     lambda x: 100 * x / x.sum())
 source_2 = df[df[keys['drug']] == 'CL1'][[keys['options'], 'ID']].groupby(keys['options']).count().transform(
     lambda x: 100 * x / x.sum())
-X = source_1.merge(source_2, on=keys['options'])
 source_3 = df[df[keys['drug']] == 'CL2'][[keys['options'], 'ID']].groupby(keys['options']).count().transform(
     lambda x: 100 * x / x.sum())
-X = X.merge(source_3, on=keys['options'])
+source_4 = df[df[keys['drug']] == 'CL3'][[keys['options'], 'ID']].groupby(keys['options']).count().transform(
+    lambda x: 100 * x / x.sum())
 
 data = [  # Portfolio (inner donut)
     go.Pie(values=list(X['ID_x']),
@@ -129,9 +118,7 @@ data = [  # Portfolio (inner donut)
 fig = go.Figure(data=data, layout={'title': 'Percentage distribution of people in a category'})
 
 st.session_state['click'] = plotly_events(fig)
-    # return fig
 
-# st.plotly_chart(Main_chart(df, keys))
 try:
     st.session_state['name'] = consum_dict[st.session_state['click'][0]['curveNumber']]
 except:
@@ -142,11 +129,6 @@ except:
 
 
 '''
-
-# st.plotly_chart(Main_chart(df, keys))
-
-# stacked pie chart: https://stackoverflow.com/questions/33019879/hierarchic-pie-donut-chart-from-pandas-dataframe-using-bokeh-or-matplotlib/33046810
-# nested pie chart : https://matplotlib.org/stable/gallery/pie_and_polar_charts/nested_pie.html#sphx-glr-gallery-pie-and-polar-charts-nested-pie-py
 
 # @st.cache(allow_output_mutation=True)
 def sub_chart1(df, keys):
