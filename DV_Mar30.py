@@ -4,7 +4,7 @@ Created by Natkamon Tovanich - version 2022-03-01
 """
 # from curses import use_default_colors
 from pydoc import cli
-import openpyxl
+
 import streamlit as st
 import pandas as pd
 import altair as alt
