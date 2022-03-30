@@ -17,7 +17,7 @@ st.set_page_config(layout="wide")
 # Visualization of Drug Consumption Behavior
 
 ## Dataframe'''
-
+dd
 
 
 # Load Gapminder data
