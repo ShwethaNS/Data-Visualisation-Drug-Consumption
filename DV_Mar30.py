@@ -8,7 +8,6 @@ from pydoc import cli
 import streamlit as st
 import pandas as pd
 import altair as alt
-import plotly.express as px
 import plotly.graph_objs as go
 from streamlit_plotly_events import plotly_events
 
@@ -29,7 +28,7 @@ For each respondent, 12 attributes are included: personality measurement of impu
 
 @st.cache
 def loadData():
-    df = pd.read_excel('Dataset 4 Drug Consumption ass2.xlsx')
+    df = pd.read_excel('Dataset 4 Drug Consumption Dataset_cleaned.xlsx')
     df_original = pd.read_excel('drug_consumption_original.xlsx')
     return df, df_original
 
