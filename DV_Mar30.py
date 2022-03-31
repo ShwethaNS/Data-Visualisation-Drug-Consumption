@@ -48,7 +48,10 @@ st.download_button(
 
 st.write('## Chart')
 '''
-
+We have merged the seven groups of drug usage into three group as below to show the clearer differences between groups: \n
+* Never consumed: CL0\n
+* Have stopped taking since a year ago : CL1 ~ CL3\n
+* Still taking : CL4 ~ CL6\n
 
 '''
 # Create the bubble chart with selection
@@ -81,8 +84,7 @@ source_2 = df[df[keys['drug']] == 'CL1'][[keys['options'], 'ID']].groupby(keys['
 source_3 = df[df[keys['drug']] == 'CL2'][[keys['options'], 'ID']].groupby(keys['options']).count()
 
 
-data = [  # Portfolio (inner donut)
-go.Pie(values=list(source_1['ID']),
+fig1 = go.Pie(values=list(source_1['ID']),
            labels=source_1.index.values.tolist(),
            domain={'x': [0.3, 0.7], 'y': [0.2,0.8]},
            hole=0.25,
@@ -91,9 +93,9 @@ go.Pie(values=list(source_1['ID']),
            marker=dict(colors=['#EC7063', '#F1948A', '#2E86C1', '#5DADE2', '#85C1E9'],
                        line=dict(color='#000000', width=1)),
            showlegend = True,
-           name = 'Never consumed'
-           ),
-    go.Pie(values=list(source_2['ID']),
+           name = 'Never consumed', textposition = "none"
+           )
+fig2 = go.Pie(values=list(source_2['ID']),
            labels=source_2.index.values.tolist(),
            domain={'x': [0.2, 0.8], 'y': [0.1, 0.9]},
            hole=0.5,
@@ -102,8 +104,8 @@ go.Pie(values=list(source_1['ID']),
            marker=dict(colors=['#EC7063', '#F1948A', '#2E86C1', '#5DADE2', '#85C1E9'],
                        line=dict(color='#000000', width=1)),
            showlegend=True, 
-           name = 'stopped consuming'),
-    go.Pie(values=list(source_3['ID']),
+           name = 'Stopped consuming')
+fig3 = go.Pie(values=list(source_3['ID']),
            labels=source_3.index.values.tolist(),
            domain={'x': [0.1, 0.9], 'y': [0, 1]},
            hole=0.75,
@@ -113,18 +115,19 @@ go.Pie(values=list(source_1['ID']),
            marker=dict(colors=['#EC7063', '#F1948A', '#2E86C1', '#5DADE2', '#85C1E9'],
                        line=dict(color='#000000', width=1)),
            showlegend=True,
-           name = 'still taking')]
+           name = 'Still taking')
+
+data = [fig1, fig2, fig3]
 
 col1, col2 = st.columns(2)
 
 with col1:
 
     fig = go.Figure(data=data)
-    fig.update_layout(uniformtext_minsize=12, uniformtext_mode='hide', margin=dict(t=0, b=0, l=0, r=0))
+    fig.update_layout(margin=dict(t=0, b=0, l=0, r=0), uniformtext = dict(minsize = 14, mode = 'hide'))
     fig.update_traces(hoverinfo = 'label+percent+name')
 
     st.session_state['click'] = plotly_events(fig)
-    st.write(st.session_state['click'])
 
     try:
         st.session_state['name'] = consum_dict[st.session_state['click'][0]['curveNumber']]
@@ -214,16 +217,7 @@ with col2:
             
             keys['scores'] = scores
             '''
-            
-            
-
-
-
-
-
-
-
-
+            \n
             '''
             st.altair_chart(sub_chart2(df, keys), use_container_width=True) 
             '''
