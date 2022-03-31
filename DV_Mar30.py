@@ -74,11 +74,11 @@ keys_1['options'] = options
 # def Main_chart(df, keys):
     # selected = alt.selection_multi(encodings=['x', 'y', 'size'])
 consum_dict = dict()
-consum_dict = {0: "CL0", 1:"CL1", 2:"CL2", 3:"CL3", 4: "CL4", 5:'CL6'}
+consum_dict = {0: "CL0", 1:"CL1", 2:"CL2"}
 
 source_1 = df[df[keys['drug']] == 'CL0'][[keys['options'], 'ID']].groupby(keys['options']).count()
 source_2 = df[df[keys['drug']] == 'CL1'][[keys['options'], 'ID']].groupby(keys['options']).count()
-source_3 = df[df[keys['drug']] == 'CL2'][[keys['options'], 'ID']].groupby(keys['options']).count()\
+source_3 = df[df[keys['drug']] == 'CL2'][[keys['options'], 'ID']].groupby(keys['options']).count()
 
 
 data = [  # Portfolio (inner donut)
@@ -87,10 +87,11 @@ go.Pie(values=list(source_1['ID']),
            domain={'x': [0.3, 0.7], 'y': [0.2,0.8]},
            hole=0.25,
            direction='clockwise',
-           sort=False,hovertext = 'Category: Never consumed',
+           sort=False,
            marker=dict(colors=['#EC7063', '#F1948A', '#2E86C1', '#5DADE2', '#85C1E9'],
-                       line=dict(color='#000000', width=2)),
-           showlegend = False
+                       line=dict(color='#000000', width=1)),
+           showlegend = True,
+           name = 'Never consumed'
            ),
     go.Pie(values=list(source_2['ID']),
            labels=source_2.index.values.tolist(),
@@ -98,28 +99,32 @@ go.Pie(values=list(source_1['ID']),
            hole=0.5,
            direction='clockwise',
            sort=False,
-           hovertext = 'Category: Have stopped consuming',
            marker=dict(colors=['#EC7063', '#F1948A', '#2E86C1', '#5DADE2', '#85C1E9'],
-                       line=dict(color='#000000', width=2)),
-           showlegend=False),
+                       line=dict(color='#000000', width=1)),
+           showlegend=True, 
+           name = 'stopped consuming'),
     go.Pie(values=list(source_3['ID']),
            labels=source_3.index.values.tolist(),
            domain={'x': [0.1, 0.9], 'y': [0, 1]},
            hole=0.75,
            direction='clockwise',
-           sort=False,hovertext = 'Category: Still Consuming',
+           sort=False,
         #    hovertemplate= '<br>percentage:{values}<br>labels: {labels}',
            marker=dict(colors=['#EC7063', '#F1948A', '#2E86C1', '#5DADE2', '#85C1E9'],
-                       line=dict(color='#000000', width=2)),
-           showlegend=True)]
+                       line=dict(color='#000000', width=1)),
+           showlegend=True,
+           name = 'still taking')]
 
 col1, col2 = st.columns(2)
 
 with col1:
 
-    fig = go.Figure(data=data, layout={'title': 'Percentage distribution of people in a category'})
+    fig = go.Figure(data=data)
+    fig.update_layout(uniformtext_minsize=12, uniformtext_mode='hide', margin=dict(t=0, b=0, l=0, r=0))
+    fig.update_traces(hoverinfo = 'label+percent+name')
 
     st.session_state['click'] = plotly_events(fig)
+    st.write(st.session_state['click'])
 
     try:
         st.session_state['name'] = consum_dict[st.session_state['click'][0]['curveNumber']]
