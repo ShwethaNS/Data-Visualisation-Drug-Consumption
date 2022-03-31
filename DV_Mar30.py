@@ -125,7 +125,7 @@ with col1:
 
     fig = go.Figure(data=data)
     fig.update_layout(margin=dict(t=0, b=0, l=0, r=0), uniformtext = dict(minsize = 14, mode = 'hide'))
-    fig.update_traces(hoverinfo = 'label+percent+name')
+    fig.update_traces(hoverinfo = 'label+value+name')
 
     st.session_state['click'] = plotly_events(fig)
 
@@ -228,3 +228,14 @@ with col2:
             A-score: Agreeableness(A)\n
             C-score: Conscientiousness(C)\n
             '''
+
+c1, c2, c3, c4 = st.columns(4)
+with c4:
+    
+    with st.expander('contact', expanded=False):
+        '''
+        Shwetha Salimath(shwetha.salimath@student-cs.fr) \n
+        Karin Isogai(karin.isogai@student-cs.fr) \n
+        Yifan Jiang (yifan.jiang@student-cs.fr) \n
+        Youjin Jeong (Youjin.jeong@student-cs.fr)  \n
+        '''
